@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fearlessfara.dtoutils;
+package io.github.fearlessfara.dtoutils;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.Objects;
 
-public class DTOUtils {
+public final class DTOUtils {
+
+    private DTOUtils() {
+
+    }
 
     public static void notNull(Object parent, Object fieldObject) {
         if (fieldObject == null) {
@@ -27,8 +32,27 @@ public class DTOUtils {
         }
     }
 
+    public static void notBlank(Object parent, String fieldObject) {
+        if (isBlank(fieldObject)) {
+            String fieldName = getFieldName(parent, fieldObject);
+            throw new IllegalArgumentException("Field " + fieldName + " cannot be null.");
+        }
+    }
+
+    public static void notEmpty(Object parent, Collection<?> collection) {
+        if (isEmpty(collection)) {
+            String fieldName = getFieldName(parent, collection);
+            throw new IllegalArgumentException("Field " + fieldName + " cannot be empty list");
+        }
+    }
+
+    private static boolean isEmpty(final Collection<?> coll) {
+        return coll == null || coll.isEmpty();
+    }
+
 
     private static String getFieldName(Object parent, Object fieldObject) {
+        Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
         Field[] allFields = parent.getClass().getDeclaredFields();
         for (Field field : allFields) {
             Object currentFieldObject;
@@ -44,5 +68,22 @@ public class DTOUtils {
             }
         }
         return null;
+    }
+
+    private static boolean isBlank(final CharSequence cs) {
+        final int strLen = length(cs);
+        if (strLen == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static int length(final CharSequence cs) {
+        return cs == null ? 0 : cs.length();
     }
 }
