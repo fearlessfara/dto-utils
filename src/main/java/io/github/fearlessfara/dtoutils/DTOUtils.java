@@ -25,6 +25,12 @@ public final class DTOUtils {
 
     }
 
+    /**
+     * Asserts the non nullity of a given field on an object
+     *
+     * @param parent      the container object of the field we want to check
+     * @param fieldObject the field we want to perform checks on
+     */
     public static void notNull(Object parent, Object fieldObject) {
         if (fieldObject == null) {
             String fieldName = getFieldName(parent, fieldObject);
@@ -32,13 +38,25 @@ public final class DTOUtils {
         }
     }
 
-    public static void notBlank(Object parent, String fieldObject) {
+    /**
+     * Asserts the non nullity and non blankness of the given string
+     *
+     * @param parent      the container object of the field we want to check
+     * @param fieldObject the field we want to perform checks on
+     */
+    public static void notBlank(Object parent, CharSequence fieldObject) {
         if (isBlank(fieldObject)) {
             String fieldName = getFieldName(parent, fieldObject);
             throw new IllegalArgumentException("Field " + fieldName + " cannot be null.");
         }
     }
 
+    /**
+     * Asserts the non empty-ness of the given collection
+     *
+     * @param parent     the container object of the field we want to check
+     * @param collection the collection we want to perform the check on
+     */
     public static void notEmpty(Object parent, Collection<?> collection) {
         if (isEmpty(collection)) {
             String fieldName = getFieldName(parent, collection);
